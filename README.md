@@ -103,6 +103,17 @@ docker compose down
 - **Migration execution order**: `spring.jpa.defer-datasource-initialization=true`
   ensures Flyway runs before Hibernate validates the schema.
 ---
+### Entities
+
+| Entity | Table | Package |
+|--------|-------|---------|
+| Tool | tools | `entity.entities` |
+
+### Enums
+
+| Enum | Values | Used in |
+|------|--------|---------|
+| ToolStatus | AVAILABLE, IN_USE, MAINTENANCE, LOST | `Tool.status` |
 
 ## How to Run
 
@@ -112,7 +123,7 @@ docker compose down
 - Maven
 
 ### Steps
-```bashaaa
+```bash
 # 1. Start the database
 docker compose up -d
 
@@ -149,6 +160,6 @@ cd backend
 - [x] Spring Boot project structure
 - [x] Database connection configured
 - [x] Flyway first migration
-- [ ] Tool entity (JPA)
+- [x] Tool entity (JPA)
 - [ ] Tool repository + service + controller
 - [ ] Angular frontend _(Phase 2)_

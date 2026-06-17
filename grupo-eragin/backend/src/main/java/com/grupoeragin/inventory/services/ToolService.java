@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +33,23 @@ public class ToolService {
         newTool.setCreatedAt(LocalDateTime.now());
 
         Tool savedTool = toolRepository.save(newTool);
-        return new ToolResponse(savedTool.getId(), savedTool.getSerialNumber(),
-                savedTool.getName(), savedTool.getBrand(), savedTool.getModel(),
-                savedTool.getStatus(), savedTool.getLocation(), savedTool.getPurchaseDate(),
-                savedTool.getCreatedAt());
+        return convertToResponse(savedTool);
+    }
+
+    public ToolResponse getById(Long id) {
+        return toolRepository.findById(id)
+                .map(this::convertToResponse)
+                .orElseThrow(() -> new IllegalArgumentException("Tool not found"));
+    }
+
+    public List<ToolResponse> getAll() {
+        return toolRepository.findAll()
+                .stream().map(this::convertToResponse)
+                .toList();
+    }
+
+    private ToolResponse convertToResponse(Tool tool) {
+        return new ToolResponse(tool.getId(), tool.getSerialNumber(), tool.getName(), tool.getBrand(),
+                tool.getModel(), tool.getStatus(), tool.getLocation(), tool.getPurchaseDate(), tool.getCreatedAt());
     }
 }

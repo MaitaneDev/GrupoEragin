@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface ToolRepository extends JpaRepository<Tool, Long> {
 
     Optional<Tool> findToolBySerialNumber(String serialNumber);
+
     boolean existsBySerialNumber(String serialNumber);
 }

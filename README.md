@@ -14,6 +14,7 @@
 - Flyway (database migrations)
 - Lombok
 - Bean Validation
+- SpringDoc OpenAPI (Swagger)
 
 ### Frontend
 - Angular 22+ _(Phase 2)_
@@ -29,42 +30,37 @@
 ---
 
 ## Project Structure
+
+```
 grupo-eragin/
-
 ├── docker-compose.yml
-
 ├── README.md
-
 └── backend/
-
-├── pom.xml
-
-└── src/
-
-└── main/
-
-├── java/
-
-│   └── com/grupoeragin/inventory/
-
-└── resources/
-
-└── application.properties
+    ├── pom.xml
+    └── src/
+        └── main/
+            ├── java/
+            │   └── com/grupoeragin/inventory/
+            └── resources/
+                ├── application.properties
+                └── db/
+                    └── migration/
+                        └── V1__create_tools_table.sql
+```
 
 ---
 
 ## Backend Architecture
+
+```
 src/main/java/com/grupoeragin/inventory/
-
-├── controller/    # REST endpoints
-
-├── service/       # Business logic
-
-├── repository/    # Data access (Spring Data JPA)
-
-├── entity/        # JPA entities (database tables)
-
-└── dto/           # Data Transfer Objects
+├── controllers/   # REST endpoints
+├── services/      # Business logic
+├── repositories/  # Data access (Spring Data JPA)
+├── entities/      # JPA entities (database tables)
+│   └── enums/     # Entity enums (e.g. ToolStatus)
+└── dtos/          # Data Transfer Objects
+```
 
 ---
 
@@ -73,18 +69,21 @@ src/main/java/com/grupoeragin/inventory/
 ### Docker Services
 
 | Service          | Image          | Port      | Purpose          |
-|------------------|----------------|-----------|------------------|
+|-------------------|----------------|-----------|------------------|
 | eragin-db        | postgres:16    | 5432:5432 | Primary database |
 | eragin-pgadmin   | dpage/pgadmin4 | 5050:80   | Database GUI     |
 
-### Start infrastructure
+### Commands
 ```bash
+# Start infrastructure
 docker compose up -d
-```
 
-### Stop infrastructure
-```bash
+# Stop infrastructure
 docker compose down
+
+# Full reset (deletes all data)
+docker compose down -v
+docker compose up -d
 ```
 
 ---
@@ -97,23 +96,34 @@ docker compose down
 - **User**: eragin_user
 - **Migrations**: Flyway (runs automatically on startup)
 - **Schema management**: Flyway owns DDL — Hibernate set to `validate` only
-- **Spring Boot 4.x + Flyway**: requires explicit `spring-boot-starter-flyway`
-  dependency. Adding only `flyway-core` + `flyway-database-postgresql` is NOT
-  enough — Spring Boot 4 won't autoconfigure Flyway without the starter.
-- **Migration execution order**: `spring.jpa.defer-datasource-initialization=true`
-  ensures Flyway runs before Hibernate validates the schema.
----
+
+### Tables
+| Table | Migration | Description |
+|-------|-----------|--------------|
+| tools | V1 | Industrial tools inventory |
+
 ### Entities
 
 | Entity | Table | Package |
 |--------|-------|---------|
-| Tool | tools | `entity.entities` |
+| Tool | tools | `entities` |
 
 ### Enums
 
 | Enum | Values | Used in |
 |------|--------|---------|
 | ToolStatus | AVAILABLE, IN_USE, MAINTENANCE, LOST | `Tool.status` |
+
+### Technical Notes
+- **Spring Boot 4.x + Flyway**: requires explicit `spring-boot-starter-flyway`
+  dependency. Adding only `flyway-core` + `flyway-database-postgresql` is NOT
+  enough — Spring Boot 4 won't autoconfigure Flyway without the starter.
+- **Migration execution order**: `spring.jpa.defer-datasource-initialization=true`
+  ensures Flyway runs before Hibernate validates the schema.
+- **New tools always start as `AVAILABLE`**: the client cannot set `status` on
+  creation — it's a business rule enforced in `ToolService`, not a client decision.
+
+---
 
 ## How to Run
 
@@ -136,13 +146,22 @@ cd backend
 | URL | Purpose |
 |-----|---------|
 | http://localhost:8080 | Backend API |
+| http://localhost:8080/swagger-ui.html | API documentation (Swagger) |
 | http://localhost:5050 | pgAdmin (DB GUI) |
 
 ---
 
 ## API Documentation
 
-> Swagger UI will be available at: `http://localhost:8080/swagger-ui.html` _(Week 2)_
+Swagger UI available at: `http://localhost:8080/swagger-ui.html`
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|--------------|
+| POST | /api/tools | Create a new tool |
+| GET | /api/tools | List all tools |
+| GET | /api/tools/{id} | Get a tool by ID |
 
 ---
 
@@ -150,7 +169,7 @@ cd backend
 
 | Week | Focus | Status |
 |------|-------|--------|
-| 1 | Docker + Spring Boot setup + Flyway + Tool entity | 🔄 In progress |
+| 1 | Docker + Spring Boot setup + Flyway + Tool CRUD (Create/Read) + Swagger | ✅ Done |
 
 ---
 
@@ -161,5 +180,8 @@ cd backend
 - [x] Database connection configured
 - [x] Flyway first migration
 - [x] Tool entity (JPA)
-- [ ] Tool repository + service + controller
+- [x] Tool repository + service + controller
+- [x] Swagger / OpenAPI documentation
 - [ ] Angular frontend _(Phase 2)_
+- [ ] Global exception handling (`@ControllerAdvice`) _(Week 2)_
+- [ ] Update / Delete endpoints for Tool _(Week 2)_

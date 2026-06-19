@@ -122,7 +122,17 @@ docker compose up -d
   ensures Flyway runs before Hibernate validates the schema.
 - **New tools always start as `AVAILABLE`**: the client cannot set `status` on
   creation — it's a business rule enforced in `ToolService`, not a client decision.
-
+- **`ddl-auto=none` vs `validate`**: In Spring Boot 4.1.0, using `validate` causes  
+  Hibernate to run schema validation before Flyway executes migrations, crashing  
+  startup. Setting `ddl-auto=none` is the correct production approach — Flyway owns  
+  the schema entirely, Hibernate trusts it without validating.
+- **Flyway script immutability**: Never modify a `V*.sql` file after it has been  
+  applied. Flyway stores a checksum per migration in `flyway_schema_history`. Any  
+  change — even whitespace — causes a `checksum mismatch` error on next startup.  
+  To fix changes, always create a new versioned migration.
+- **Full reset procedure** (when `flyway_schema_history` is corrupted or  
+  checksums are stale):  
+  `docker compose down -v && docker compose up -d`
 ---
 
 ## How to Run

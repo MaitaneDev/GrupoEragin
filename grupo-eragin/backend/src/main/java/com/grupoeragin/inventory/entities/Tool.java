@@ -47,4 +47,8 @@ public class Tool implements Serializable {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", nullable = true)
+    private Employee employee;
 }

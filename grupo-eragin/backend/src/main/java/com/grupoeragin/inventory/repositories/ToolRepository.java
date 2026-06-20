@@ -10,4 +10,6 @@ public interface ToolRepository extends JpaRepository<Tool, Long> {
     Optional<Tool> findToolBySerialNumber(String serialNumber);
 
     boolean existsBySerialNumber(String serialNumber);
+
+    void deleteBySerialNumber(String serialNumber);
 }

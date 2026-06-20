@@ -39,7 +39,4 @@ public class Employee implements Serializable {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
-    private List<Tool> tools = new ArrayList<>();
 }

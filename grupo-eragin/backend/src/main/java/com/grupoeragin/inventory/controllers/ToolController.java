@@ -1,7 +1,7 @@
 package com.grupoeragin.inventory.controllers;
 
-import com.grupoeragin.inventory.dtos.ToolCreateRequest;
-import com.grupoeragin.inventory.dtos.ToolResponse;
+import com.grupoeragin.inventory.dtos.tools.ToolCreateRequest;
+import com.grupoeragin.inventory.dtos.tools.ToolResponse;
 import com.grupoeragin.inventory.services.ToolService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +34,19 @@ public class ToolController {
     public ResponseEntity<List<ToolResponse>> getAllTools() {
         List<ToolResponse> response = toolService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ToolResponse> updateTool(
+            @PathVariable Long id,
+            @Valid @RequestBody ToolCreateRequest tool) {
+        ToolResponse response = toolService.update(id, tool);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteToolById(@PathVariable Long id) {
+        toolService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,5 +1,6 @@
-package com.grupoeragin.inventory.dtos;
+package com.grupoeragin.inventory.dtos.tools;
 
+import com.grupoeragin.inventory.dtos.employee.EmployeeSummary;
 import com.grupoeragin.inventory.entities.enums.ToolStatus;
 
 import java.time.LocalDate;
@@ -14,5 +15,7 @@ public record ToolResponse(
         ToolStatus status,
         String location,
         LocalDate purchaseDate,
-        LocalDateTime createdAt
-) {}
+        LocalDateTime createdAt,
+        EmployeeSummary employee
+) {
+}

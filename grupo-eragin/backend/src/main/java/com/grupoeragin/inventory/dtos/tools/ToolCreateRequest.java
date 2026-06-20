@@ -1,4 +1,4 @@
-package com.grupoeragin.inventory.dtos;
+package com.grupoeragin.inventory.dtos.tools;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -11,4 +11,5 @@ public record ToolCreateRequest(
         @NotBlank String model,
         String location,
         LocalDate purchaseDate
-) {}
+) {
+}

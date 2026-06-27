@@ -165,15 +165,39 @@ cd backend
 
 Swagger UI available at: `http://localhost:8080/swagger-ui.html`
 
+### Tables
+| Table | Migration | Description |
+|-------|-----------|-------------|
+| tools | V1 | Industrial tools inventory |
+| employees | V2 | Company employees |
+
+### Entities
+| Entity | Table | Package |
+|--------|-------|---------|
+| Tool | tools | `entities` |
+| Employee | employees | `entities` |
+
 ## API Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|--------------|
+|--------|----------|-------------|
 | POST | /api/tools | Create a new tool |
 | GET | /api/tools | List all tools |
-| GET | /api/tools/{id} | Get a tool by ID |
+| GET | /api/tools/{id} | Get tool by ID |
+| PUT | /api/tools/{id} | Update tool |
+| DELETE | /api/tools/{id} | Delete tool |
+| POST | /api/employees | Create a new employee |
+| GET | /api/employees | List all employees |
+| GET | /api/employees/{id} | Get employee by ID |
+| GET | /api/employees/dni/{dni} | Get employee by DNI |
+| PUT | /api/employees/{id} | Update employee |
+| DELETE | /api/employees/{id} | Delete employee |
 
----
+## Weekly Progress
+| Week | Focus | Status |
+|------|-------|--------|
+| 1 | Docker + Spring Boot + Flyway + Tool CRUD + Swagger | ✅ Done |
+| 2 | JPA relationships + Employee CRUD + Summary DTOs | 🔄 In progress |
 
 ## Weekly Progress
 

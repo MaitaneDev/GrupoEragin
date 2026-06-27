@@ -59,7 +59,6 @@ public class EmployeeService {
         existEmployee.setDni(employee.dni());
         existEmployee.setEmail(employee.email());
         existEmployee.setPhone(employee.phone());
-        existEmployee.setCreatedAt(LocalDateTime.now());
 
         Employee updatedEmployee = employeeRepository.save(existEmployee);
         return convertToResponse(updatedEmployee);
